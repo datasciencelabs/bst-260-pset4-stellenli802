@@ -226,7 +226,15 @@ cases |>
 ```{r}
 library(lubridate)
 library(knitr)
-#cases
+
+cases_raw |> 
+  mutate(date = lubridate::ymd(date)) |>
+  filter(lubridate::year(date) %in% c(2020, 2021)) |>
+  group_by(year = lubridate::year(date), month = lubridate::month(date, label = TRUE, abbr = FALSE)) |>
+  summarise(total_cases = sum(cases, na.rm = TRUE), .groups = "drop") |>
+  arrange(year, month) |>
+  knitr::kable(caption = "Total cases in 2020-2021", align = "c")
+
 cases |> 
   mutate(date = lubridate::ymd(date)) |>
   filter(lubridate::year(date) %in% c(2020, 2021)) |>
